@@ -1,0 +1,10 @@
+{
+  "name": "com.strodio.unity-toolkit.serializable-dictionary",
+  "version": "0.0.1",
+  "displayName": "Serializable Dictionary",
+  "description": "Serializable dictionary for Unity",
+  "unity": "2019.1",
+  "author": {
+    "name": "Strom"
+  }
+}
