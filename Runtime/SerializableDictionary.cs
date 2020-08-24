@@ -6,13 +6,13 @@ using UnityEngine;
 
 public abstract class SerializableDictionaryBase
 {
-	public abstract class Storage {}
+	public abstract class Storage { }
 
 	protected class Dictionary<TKey, TValue> : System.Collections.Generic.Dictionary<TKey, TValue>
 	{
-		public Dictionary() {}
-		public Dictionary(IDictionary<TKey, TValue> dict) : base(dict) {}
-		public Dictionary(SerializationInfo info, StreamingContext context) : base(info, context) {}
+		public Dictionary() { }
+		public Dictionary(IDictionary<TKey, TValue> dict) : base(dict) { }
+		public Dictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
 }
 
@@ -31,7 +31,7 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 	}
 
 	public SerializableDictionaryBase(IDictionary<TKey, TValue> dict)
-	{	
+	{
 		m_dict = new Dictionary<TKey, TValue>(dict);
 	}
 
@@ -49,11 +49,11 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 
 	public void OnAfterDeserialize()
 	{
-		if(m_keys != null && m_values != null && m_keys.Length == m_values.Length)
+		if (m_keys != null && m_values != null && m_keys.Length == m_values.Length)
 		{
 			m_dict.Clear();
 			int n = m_keys.Length;
-			for(int i = 0; i < n; ++i)
+			for (int i = 0; i < n; ++i)
 			{
 				m_dict[m_keys[i]] = GetValue(m_values, i);
 			}
@@ -70,7 +70,7 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 		m_values = new TValueStorage[n];
 
 		int i = 0;
-		foreach(var kvp in m_dict)
+		foreach (var kvp in m_dict)
 		{
 			m_keys[i] = kvp.Key;
 			SetValue(m_values, i, kvp.Value);
@@ -79,14 +79,13 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 	}
 
 	#region IDictionary<TKey, TValue>
-	
-	public ICollection<TKey> Keys {	get { return ((IDictionary<TKey, TValue>)m_dict).Keys; } }
+
+	public ICollection<TKey> Keys { get { return ((IDictionary<TKey, TValue>)m_dict).Keys; } }
 	public ICollection<TValue> Values { get { return ((IDictionary<TKey, TValue>)m_dict).Values; } }
 	public int Count { get { return ((IDictionary<TKey, TValue>)m_dict).Count; } }
 	public bool IsReadOnly { get { return ((IDictionary<TKey, TValue>)m_dict).IsReadOnly; } }
 
-	public TValue this[TKey key]
-	{
+	public TValue this[TKey key] {
 		get { return ((IDictionary<TKey, TValue>)m_dict)[key]; }
 		set { ((IDictionary<TKey, TValue>)m_dict)[key] = value; }
 	}
@@ -156,8 +155,7 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 	public bool IsSynchronized { get { return ((IDictionary)m_dict).IsSynchronized; } }
 	public object SyncRoot { get { return ((IDictionary)m_dict).SyncRoot; } }
 
-	public object this[object key]
-	{
+	public object this[object key] {
 		get { return ((IDictionary)m_dict)[key]; }
 		set { ((IDictionary)m_dict)[key] = value; }
 	}
@@ -200,7 +198,7 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 
 	#region ISerializable
 
-	protected SerializableDictionaryBase(SerializationInfo info, StreamingContext context) 
+	protected SerializableDictionaryBase(SerializationInfo info, StreamingContext context)
 	{
 		m_dict = new Dictionary<TKey, TValue>(info, context);
 	}
@@ -223,9 +221,9 @@ public static class SerializableDictionary
 
 public class SerializableDictionary<TKey, TValue> : SerializableDictionaryBase<TKey, TValue, TValue>
 {
-	public SerializableDictionary() {}
-	public SerializableDictionary(IDictionary<TKey, TValue> dict) : base(dict) {}
-	protected SerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	public SerializableDictionary() { }
+	public SerializableDictionary(IDictionary<TKey, TValue> dict) : base(dict) { }
+	protected SerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
 	protected override TValue GetValue(TValue[] storage, int i)
 	{
@@ -240,9 +238,9 @@ public class SerializableDictionary<TKey, TValue> : SerializableDictionaryBase<T
 
 public class SerializableDictionary<TKey, TValue, TValueStorage> : SerializableDictionaryBase<TKey, TValue, TValueStorage> where TValueStorage : SerializableDictionary.Storage<TValue>, new()
 {
-	public SerializableDictionary() {}
-	public SerializableDictionary(IDictionary<TKey, TValue> dict) : base(dict) {}
-	protected SerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	public SerializableDictionary() { }
+	public SerializableDictionary(IDictionary<TKey, TValue> dict) : base(dict) { }
+	protected SerializableDictionary(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
 	protected override TValue GetValue(TValueStorage[] storage, int i)
 	{
