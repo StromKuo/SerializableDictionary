@@ -80,10 +80,10 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 
 	#region IDictionary<TKey, TValue>
 
-	public ICollection<TKey> Keys { get { return ((IDictionary<TKey, TValue>)m_dict).Keys; } }
-	public ICollection<TValue> Values { get { return ((IDictionary<TKey, TValue>)m_dict).Values; } }
-	public int Count { get { return ((IDictionary<TKey, TValue>)m_dict).Count; } }
-	public bool IsReadOnly { get { return ((IDictionary<TKey, TValue>)m_dict).IsReadOnly; } }
+	public ICollection<TKey> Keys => m_dict.Keys;
+	public ICollection<TValue> Values => m_dict.Values;
+	public int Count => m_dict.Count;
+	public bool IsReadOnly => ((IDictionary<TKey, TValue>)m_dict).IsReadOnly;
 
 	public TValue this[TKey key] {
 		get { return ((IDictionary<TKey, TValue>)m_dict)[key]; }
@@ -149,11 +149,11 @@ public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : 
 
 	#region IDictionary
 
-	public bool IsFixedSize { get { return ((IDictionary)m_dict).IsFixedSize; } }
-	ICollection IDictionary.Keys { get { return ((IDictionary)m_dict).Keys; } }
-	ICollection IDictionary.Values { get { return ((IDictionary)m_dict).Values; } }
-	public bool IsSynchronized { get { return ((IDictionary)m_dict).IsSynchronized; } }
-	public object SyncRoot { get { return ((IDictionary)m_dict).SyncRoot; } }
+	public bool IsFixedSize => ((IDictionary)m_dict).IsFixedSize;
+	ICollection IDictionary.Keys => ((IDictionary)m_dict).Keys;
+	ICollection IDictionary.Values => ((IDictionary)m_dict).Values;
+	public bool IsSynchronized => ((IDictionary)m_dict).IsSynchronized;
+	public object SyncRoot => ((IDictionary)m_dict).SyncRoot;
 
 	public object this[object key] {
 		get { return ((IDictionary)m_dict)[key]; }
@@ -219,6 +219,7 @@ public static class SerializableDictionary
 	}
 }
 
+[Serializable]
 public class SerializableDictionary<TKey, TValue> : SerializableDictionaryBase<TKey, TValue, TValue>
 {
 	public SerializableDictionary() { }
