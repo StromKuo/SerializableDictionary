@@ -16,13 +16,9 @@ public class SerializableKeyValuePair<TKey, TValue>
     //    this._value = value;
     //}
 
-    public TKey Key {
-        get { return m_key; }
-    }
+    public TKey Key => m_key;
 
-    public TValue Value {
-        get { return m_value; }
-    }
+    public TValue Value => m_value;
 
     public override string ToString()
     {

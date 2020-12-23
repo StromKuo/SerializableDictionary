@@ -5,9 +5,9 @@ using UnityEditor;
 using System.Reflection;
 using System;
 
-[CustomPropertyDrawer(typeof(SerializableDictionaryBase), true)]
+[CustomPropertyDrawer(typeof(SerializableDictionaryBase<,,>), true)]
 #if NET_4_6 || NET_STANDARD_2_0
-[CustomPropertyDrawer(typeof(SerializableHashSetBase), true)]
+[CustomPropertyDrawer(typeof(SerializableHashSet<>), true)]
 #endif
 public class SerializableDictionaryPropertyDrawer : PropertyDrawer
 {
@@ -591,7 +591,7 @@ public class SerializableDictionaryPropertyDrawer : PropertyDrawer
 	}
 }
 
-[CustomPropertyDrawer(typeof(SerializableDictionaryBase.Storage), true)]
+[CustomPropertyDrawer(typeof(SerializableDictionaryStorage<>), true)]
 public class SerializableDictionaryStoragePropertyDrawer : PropertyDrawer
 {
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
