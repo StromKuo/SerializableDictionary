@@ -3,37 +3,40 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class SerializableHashSet<T> : HashSet<T>, ISerializationCallbackReceiver
+namespace SKUnityToolkit.SerializableDictionary
 {
-	[SerializeField]
-	T[] m_keys;
+    [Serializable]
+    public class SerializableHashSet<T> : HashSet<T>, ISerializationCallbackReceiver
+    {
+        [SerializeField]
+        T[] m_keys;
 
-	void ISerializationCallbackReceiver.OnAfterDeserialize()
-	{
-		if(m_keys != null)
-		{
-			this.Clear();
-			for(int i = 0; i < m_keys.Length; ++i)
-			{
-				this.Add(m_keys[i]);
-			}
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            if (m_keys != null)
+            {
+                Clear();
+                for (int i = 0; i < m_keys.Length; ++i)
+                {
+                    Add(m_keys[i]);
+                }
 
-			m_keys = null;
-		}
-	}
+                m_keys = null;
+            }
+        }
 
-	void ISerializationCallbackReceiver.OnBeforeSerialize()
-	{
-		int n = this.Count;
-		m_keys = new T[n];
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            int n = Count;
+            m_keys = new T[n];
 
-		int i = 0;
-		foreach(var value in this)
-		{
-			m_keys[i] = value;
-			++i;
-		}
-	}
+            int i = 0;
+            foreach (var value in this)
+            {
+                m_keys[i] = value;
+                ++i;
+            }
+        }
+    }
 }
 #endif
