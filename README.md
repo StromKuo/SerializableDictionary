@@ -4,6 +4,10 @@ A package for Unity to serialize Dictionary, HashSet and KeyValuePair.
 
 This project is developed from [azixMcAze's SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary).
 
+![demo](./Documentation~/SerializableDictionary_screenshot1.png)
+
+![demo](./Documentation~/SerializableDictionary_screenshot2.png)
+
 ## Usage
 
 Before Unity 2020.1, Unity doesn't support serialization of generic class, you need to create a derived class from `SerializableDictionary`, `SerializableHashSet` or `SerializableKeyValuePair`.
