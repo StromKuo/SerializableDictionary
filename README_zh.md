@@ -2,33 +2,33 @@
 
 [README](README.md) | [中文文档](README_zh.md)
 
-A package for Unity to serialize Dictionary, HashSet and KeyValuePair.
+一个 Unity package 用来序列化字 Dictionary、 HashSet 和 KeyValuePair 类型.
 
-This project is developed from [azixMcAze's SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary).
+这个项目是从 [azixMcAze's SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary) 发展而来.
 
 ![demo](./Documentation~/SerializableDictionary_screenshot1.png)
 
 ![demo](./Documentation~/SerializableDictionary_screenshot2.png)
 
-## Installation
+## 安装
 
-### Install via Package Manager
+### 通过 Package Manager 安装
 
-Go to "*MenuBar* > *Window* > *Package Manager* > *Add* > *Add package from git URL*" and enter the URL "https://github.com/StromKuo/SerializableDictionary.git"
+找到 "*MenuBar* > *Window* > *Package Manager* > *Add* > *Add package from git URL*" 并输入 URL "https://github.com/StromKuo/SerializableDictionary.git"
 
 ![add_package_from_git_url](./Documentation~/add_package_from_git_url.png)
 
-### Install via Download
+### 通过下载安装
 
-Download and extract this project and put it in the *Packages* folder of your project.
+下载并解压该项目，然后将其放到你的项目的 *Packages* 目录下.
 
-### Install via OpenUPM
+### 通过 OpenUPM 安装
 
-Not yet...
+还不行...
 
-## Usage
+## 使用
 
-Before Unity 2020.1, Unity doesn't support serialization of generic class, you need to create a derived class from `SerializableDictionary`, `SerializableHashSet` or `SerializableKeyValuePair`.
+在 Unity 2020.1 之前, Unity 不支持序列化泛型类型, 你需要先创建一个继承自 `SerializableDictionary`、 `SerializableHashSet` 或 `SerializableKeyValuePair` 的非泛型类型用于序列化.
 
 ```c#
     [SerializeField]
@@ -64,7 +64,7 @@ Before Unity 2020.1, Unity doesn't support serialization of generic class, you n
     public class StringIntPair : SerializableKeyValuePair<string, int> {}
 ```
 
-After Unity 2020.1:
+从 Unity 2020.1 开始，可以直接序列化泛型类型:
 
 ```c#
     [SerializeField]
@@ -87,11 +87,11 @@ After Unity 2020.1:
     }
 ```
 
-## Dictionary of lists or arrays
+## 嵌套 list 或 array 类型的 Dictionary
 
-Unity cannot serialize a array of lists or an array of arrays.
+Unity 无法序列化这种类型.
 
-Create a class that inherits from `SerializableDictionaryStorage<List<TValue>`. This storage class will only contain a `List<TValue> data` field.
+需要先创建一个继承自 `SerializableDictionaryStorage<List<TValue>` 的类型. 该类型只包含 `List<TValue> data` 一个字段.
 
 ```c#
 [SerializeField]
@@ -104,6 +104,6 @@ public class ColorListStorage : SerializableDictionaryStorage<List<Color>> {}
 [Serializable]
 public class StringColorListDictionary : SerializableDictionary<string, ColorListStorage> {}
 
-// you would have to access the color list through the .data field of ColorListStorage
-List<Color> colorList = m_colorStringListDict[key].data;
+// 你需要通过 ColorListStorage 的 .data 字段来访问你的 List<Color>
+ colorList = m_colorStringListDict[key].data;
 ```
