@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SKUnityToolkit.SerializableDictionary
 {
-    [SerializeField]
+    [Serializable]
     public class SerializableKeyValuePair<TKey, TValue>
     {
         [SerializeField]
@@ -12,11 +13,11 @@ namespace SKUnityToolkit.SerializableDictionary
         [SerializeField]
         private TValue m_value;
 
-        //public SerializableKeyValuePair(TKey key, TValue value)
-        //{
-        //    this._key = key;
-        //    this._value = value;
-        //}
+        public SerializableKeyValuePair(TKey key, TValue value)
+        {
+            this.m_key = key;
+            this.m_value = value;
+        }
 
         public TKey Key => m_key;
 
