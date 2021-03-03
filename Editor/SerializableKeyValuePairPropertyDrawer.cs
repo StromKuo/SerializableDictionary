@@ -24,8 +24,16 @@ namespace SKUnityToolkit.SerializableDictionary
 
             float keyPropertyHeight = EditorGUI.GetPropertyHeight(keyProperty);
             float valuePropertyHeight = valueProperty != null ? EditorGUI.GetPropertyHeight(valueProperty) : 0f;
-            float lineHeight = Mathf.Max(keyPropertyHeight, valuePropertyHeight);
 
+            float lineHeight;
+            if (DrawKeyValuePairHelper.CanPropertyBeExpanded(valueProperty))
+            {
+                lineHeight = keyPropertyHeight + valuePropertyHeight;
+            }
+            else
+            {
+                lineHeight = Mathf.Max(keyPropertyHeight, valuePropertyHeight);
+            }
             return lineHeight;
         }
     }
@@ -107,6 +115,8 @@ namespace SKUnityToolkit.SerializableDictionary
             float valuePropertyHeight = EditorGUI.GetPropertyHeight(valueProperty);
             var valuePosition = linePosition;
             valuePosition.height = valuePropertyHeight;
+            valuePosition.yMin += keyPropertyHeight;
+            valuePosition.yMin += EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.PropertyField(valuePosition, valueProperty, GUIContent.none, true);
 
             EditorGUIUtility.labelWidth = labelWidth;
@@ -127,7 +137,7 @@ namespace SKUnityToolkit.SerializableDictionary
             return keyPropertyHeight;
         }
 
-        static bool CanPropertyBeExpanded(SerializedProperty property)
+        public static bool CanPropertyBeExpanded(SerializedProperty property)
         {
             switch (property.propertyType)
             {
