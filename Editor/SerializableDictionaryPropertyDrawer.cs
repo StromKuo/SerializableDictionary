@@ -267,7 +267,18 @@ namespace SKUnityToolkit.SerializableDictionary
 
         private ReorderableList GetList(SerializedProperty pairsProperty, GUIContent label)
         {
-            if (_reorderableList == null || !SerializedProperty.EqualContents(_reorderableList.serializedProperty, pairsProperty))
+            bool shouldNewList = true;
+            try
+            {
+                shouldNewList = _reorderableList == null || !SerializedProperty.DataEquals(_reorderableList.serializedProperty, pairsProperty);
+            }
+            //SerializedObject of _reorderableList has been Disposed.
+            catch (NullReferenceException e)
+            {
+                Debug.Log(e.Message);
+            }
+
+            if (shouldNewList)
             {
                 _reorderableList = new ReorderableList(pairsProperty.serializedObject, pairsProperty, true, false, true, true)
                 {
