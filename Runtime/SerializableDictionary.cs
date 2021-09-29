@@ -10,6 +10,13 @@ namespace SKUnityToolkit.SerializableDictionary
         [SerializeField]
         SerializableKeyValuePair<TKey, TValue>[] m_pairs;
 
+        public SerializableDictionary() : base() { }
+        public SerializableDictionary(IDictionary<TKey, TValue> dictionary) : base(dictionary) { }
+        public SerializableDictionary(IEqualityComparer<TKey> comparer) : base(comparer) { }
+        public SerializableDictionary(int capacity) : base(capacity) { }
+        public SerializableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) : base(dictionary, comparer) { }
+        public SerializableDictionary(int capacity, IEqualityComparer<TKey> comparer) : base(capacity, comparer) { }
+
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             if (this.m_pairs != null)
