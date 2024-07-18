@@ -1,5 +1,5 @@
 {
-  "name": "com.strodio.unity-toolkit.serializable-dictionary",
+  "name": "com.strodio.serializable-dictionary",
   "version": "0.0.2",
   "displayName": "Serializable Dictionary",
   "description": "Serializable dictionary for Unity",
