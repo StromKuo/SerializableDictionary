@@ -92,6 +92,7 @@ namespace SKUnityToolkit.SerializableDictionary
             var valuePosition = linePosition;
             valuePosition.height = valuePropertyHeight;
             valuePosition.xMin += labelWidth;
+            valuePosition.xMin += EditorGUIUtility.standardVerticalSpacing;
             EditorGUIUtility.labelWidth = valuePosition.width * labelWidthRelative;
             EditorGUI.indentLevel--;
             EditorGUI.PropertyField(valuePosition, valueProperty, TempContent(valueLabel), true);
@@ -142,6 +143,7 @@ namespace SKUnityToolkit.SerializableDictionary
             switch (property.propertyType)
             {
                 case SerializedPropertyType.Generic:
+                    return !property.type.StartsWith("AssetReference") || property.isArray;
                 case SerializedPropertyType.Vector4:
                 case SerializedPropertyType.Quaternion:
                     return true;
