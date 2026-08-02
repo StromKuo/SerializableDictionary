@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "com.strodio.serializable-dictionary": "file:../../..",
+    "com.unity.test-framework": "1.1.33"
+  },
+  "testables": [
+    "com.strodio.serializable-dictionary"
+  ]
+}

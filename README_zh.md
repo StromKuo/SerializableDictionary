@@ -1,117 +1,99 @@
 # SerializableDictionary
 
-[![Releases](https://img.shields.io/github/release/StromKuo/SerializableDictionary.svg)](https://github.com/StromKuo/SerializableDictionary/releases) [![openupm](https://img.shields.io/npm/v/com.strodio.serializable-dictionary?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.strodio.serializable-dictionary/)
+[![GitHub Actions](https://github.com/StromKuo/SerializableDictionary/actions/workflows/ci.yml/badge.svg)](https://github.com/StromKuo/SerializableDictionary/actions/workflows/ci.yml) [![Releases](https://img.shields.io/github/release/StromKuo/SerializableDictionary.svg)](https://github.com/StromKuo/SerializableDictionary/releases) [![openupm](https://img.shields.io/npm/v/com.strodio.serializable-dictionary?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.strodio.serializable-dictionary/)
 
 [README](README.md) | [中文文档](README_zh.md)
 
-一个 Unity package 用来序列化字 Dictionary、 HashSet 和 KeyValuePair 类型.
+可序列化的 `Dictionary`、`HashSet` 和类 `KeyValuePair` 类型，并提供可重排的 Unity Inspector 控件。
 
-这个项目是从 [azixMcAze's SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary) 发展而来.
+本项目基于 [azixMcAze 的 Unity-SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary) 开发，详情参阅[第三方声明](THIRD%20PARTY%20NOTICES.md)。
 
-![demo](./Documentation~/SerializableDictionary_screenshot1.png)
+![Serializable Dictionary Inspector](./Documentation~/SerializableDictionary_screenshot1.png)
 
-![demo](./Documentation~/SerializableDictionary_screenshot2.png)
+![Serializable HashSet Inspector](./Documentation~/SerializableDictionary_screenshot2.png)
+
+## 环境要求
+
+- Unity 2022.3 或更高版本。
+- 键和值类型必须符合 Unity 的序列化规则。
+
+该包使用 Unity 2022.3 LTS 和 Unity 6 进行测试。
 
 ## 安装
 
-### 通过 Package Manager 安装
+### OpenUPM
 
-找到 "*MenuBar* > *Window* > *Package Manager* > *Add* > *Add package from git URL*" 并输入 URL "https://github.com/StromKuo/SerializableDictionary.git"
-
-![add_package_from_git_url](./Documentation~/add_package_from_git_url.png)
-
-### 通过下载安装
-
-下载并解压该项目，然后将其放到你的项目的 *Packages* 目录下.
-
-### 通过 OpenUPM 安装
-
-在 Unity 项目目录中执行以下命令：
+在 Unity 项目目录中执行：
 
 ```sh
 openupm add com.strodio.serializable-dictionary
 ```
 
-更多 OpenUPM 安装说明请参阅 [OpenUPM 包页面](https://openupm.com/packages/com.strodio.serializable-dictionary/)。
+通过 scoped registry 安装时请参阅 [OpenUPM 包页面](https://openupm.com/packages/com.strodio.serializable-dictionary/)。
 
-## 使用
+### Git URL
 
-在 Unity 2020.1 之前, Unity 不支持序列化泛型类型, 你需要先创建一个继承自 `SerializableDictionary`、 `SerializableHashSet` 或 `SerializableKeyValuePair` 的非泛型类型用于序列化.
+在 Package Manager 中选择 **Add package from git URL**，然后输入：
 
-```c#
-    [SerializeField]
-    StringStringDictionary m_StringStringDictionary;
-
-    [SerializeField]
-    StringMyClassDictionary m_StringMyClassDictionary;
-
-    [SerializeField]
-    ColorHashSet m_ColorHashSet;
-
-    [SerializeField]
-    StringIntPair m_StringIntPair;
-
-
-    [Serializable]
-    public class StringStringDictionary : SerializableDictionary<string, string> {}
-
-    [Serializable]
-    public class MyClass
-    {
-        public int i;
-        public string str;
-    }
-
-    [Serializable]
-    public class StringMyClassDictionary : SerializableDictionary<string, MyClass> {}
-
-    [Serializable]
-    public class ColorHashSet : SerializableHashSet<Color> {}
-
-    [Serializable]
-    public class StringIntPair : SerializableKeyValuePair<string, int> {}
+```text
+https://github.com/StromKuo/SerializableDictionary.git
 ```
 
-从 Unity 2020.1 开始，可以直接序列化泛型类型:
+如需可复现构建，请附加发布标签，例如 `#v0.2.0`。
 
-```c#
+## 使用方法
+
+```csharp
+using System;
+using SKUnityToolkit.SerializableDictionary;
+using UnityEngine;
+
+public class Inventory : MonoBehaviour
+{
     [SerializeField]
-    SerializableDictionary<string, string> m_StringStringDictionary;
+    SerializableDictionary<string, int> itemCounts = new SerializableDictionary<string, int>();
 
     [SerializeField]
-    SerializableDictionary<string, MyClass> m_StringMyClassDictionary;
+    SerializableHashSet<string> unlockedItems = new SerializableHashSet<string>();
 
     [SerializeField]
-    SerializableHashSet<Color> m_ColorHashSet;
-
-    [SerializeField]
-    SerializableKeyValuePair<string, int> m_StringIntPair;
-
-    [Serializable]
-    public class MyClass
-    {
-        public int i;
-        public string str;
-    }
+    SerializableKeyValuePair<string, Color> categoryColor =
+        new SerializableKeyValuePair<string, Color>("Default", Color.white);
+}
 ```
 
-## 嵌套 list 或 array 类型的 Dictionary
+这些类型继承自标准集合实现，因此运行时可以使用普通 Dictionary 和 HashSet API。
 
-Unity 无法序列化这种类型.
+## 嵌套集合
 
-需要先创建一个继承自 `SerializableDictionaryStorage<List<TValue>` 的类型. 该类型只包含 `List<TValue> data` 一个字段.
+Unity 不能直接序列化嵌套容器，需要用可序列化类包装内层集合：
 
-```c#
+```csharp
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable]
+public class ColorList
+{
+    public List<Color> values = new List<Color>();
+}
+
 [SerializeField]
-StringColorListDictionary m_colorStringListDict;
-
-
-[Serializable]
-public class ColorListStorage : SerializableDictionaryStorage<List<Color>> {}
-
-[Serializable]
-public class StringColorListDictionary : SerializableDictionary<string, ColorListStorage> {}
-
-// 你需要通过 ColorListStorage 的 .data 字段来访问你的 List<Color>
- colorList = m_colorStringListDict[key].data;
+SerializableDictionary<string, ColorList> colorsByCategory =
+    new SerializableDictionary<string, ColorList>();
 ```
+
+## 冲突行为与限制
+
+- 字典键重复时保留第一项，后续重复项会被丢弃。
+- 空键和已经销毁的 `UnityEngine.Object` 键会被丢弃。
+- `DeserializationConflictCount` 表示最近一次反序列化丢弃的字典或 HashSet 条目数。
+- 自定义相等比较器只影响当前内存实例，不会被 Unity 序列化。
+- 序列化顺序取决于集合枚举顺序，不应作为业务逻辑依据。
+
+更多内容请参阅[完整文档](Documentation~/index.md)、[更新日志](CHANGELOG.md)，以及 Package Manager 中可导入的 **Basic Usage** 示例。
+
+## 许可证
+
+[MIT](LICENSE)

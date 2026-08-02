@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  validate-package:
+    name: Validate package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate manifest and layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(jq -r .name package.json)" = "com.strodio.serializable-dictionary"
+          test "$(jq -r .version package.json)" = "0.2.0"
+          test "$(jq -r .unity package.json)" = "2022.3"
+          test -f CHANGELOG.md
+          test -f Documentation~/index.md
+          test -f "Samples~/Basic Usage/SerializableDictionaryExample.cs"
+          test -f Tests/Editor/SKUnityToolkit.SerializableDictionary.Editor.Tests.asmdef
+          ! grep -R "SerializableDictionaryStorage\|m_values" --include='*.cs' README.md README_zh.md Documentation~ Editor Runtime Tests Samples~
+
+  unity-tests:
+    name: Unity ${{ matrix.unityVersion }} tests
+    if: ${{ vars.RUN_UNITY_TESTS == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        unityVersion:
+          - 2022.3.62f3
+          - 6000.0.65f1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Include package sample in compilation
+        shell: bash
+        run: cp "Samples~/Basic Usage/SerializableDictionaryExample.cs" .github/TestProject/Assets/
+
+      - name: Run EditMode tests
+        id: editmode_tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: .github/TestProject
+          unityVersion: ${{ matrix.unityVersion }}
+          testMode: editmode
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity ${{ matrix.unityVersion }} EditMode results
+          artifactsPath: TestResults/${{ matrix.unityVersion }}-editmode
+
+      - name: Run PlayMode tests
+        id: playmode_tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: .github/TestProject
+          unityVersion: ${{ matrix.unityVersion }}
+          testMode: playmode
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity ${{ matrix.unityVersion }} PlayMode results
+          artifactsPath: TestResults/${{ matrix.unityVersion }}-playmode
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-test-results-${{ matrix.unityVersion }}
+          path: |
+            ${{ steps.editmode_tests.outputs.artifactsPath }}
+            ${{ steps.playmode_tests.outputs.artifactsPath }}
+          if-no-files-found: ignore

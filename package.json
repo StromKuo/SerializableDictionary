@@ -1,10 +1,32 @@
 {
   "name": "com.strodio.serializable-dictionary",
-  "version": "0.0.3",
+  "version": "0.2.0",
   "displayName": "Serializable Dictionary",
-  "description": "Serializable dictionary for Unity",
-  "unity": "2019.1",
+  "description": "Serializable Dictionary, HashSet and KeyValuePair implementations with custom Unity Inspector drawers.",
+  "unity": "2022.3",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/StromKuo/SerializableDictionary/blob/master/LICENSE",
+  "documentationUrl": "https://github.com/StromKuo/SerializableDictionary/blob/master/Documentation~/index.md",
+  "changelogUrl": "https://github.com/StromKuo/SerializableDictionary/blob/master/CHANGELOG.md",
+  "keywords": [
+    "serialization",
+    "dictionary",
+    "hashset",
+    "inspector"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StromKuo/SerializableDictionary.git"
+  },
   "author": {
-    "name": "Strom"
-  }
+    "name": "Strom",
+    "url": "https://github.com/StromKuo"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Usage",
+      "description": "Dictionary, HashSet and KeyValuePair fields displayed in the Inspector.",
+      "path": "Samples~/Basic Usage"
+    }
+  ]
 }

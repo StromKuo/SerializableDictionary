@@ -1,117 +1,99 @@
 # SerializableDictionary
 
-[![Releases](https://img.shields.io/github/release/StromKuo/SerializableDictionary.svg)](https://github.com/StromKuo/SerializableDictionary/releases) [![openupm](https://img.shields.io/npm/v/com.strodio.serializable-dictionary?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.strodio.serializable-dictionary/)
+[![GitHub Actions](https://github.com/StromKuo/SerializableDictionary/actions/workflows/ci.yml/badge.svg)](https://github.com/StromKuo/SerializableDictionary/actions/workflows/ci.yml) [![Releases](https://img.shields.io/github/release/StromKuo/SerializableDictionary.svg)](https://github.com/StromKuo/SerializableDictionary/releases) [![openupm](https://img.shields.io/npm/v/com.strodio.serializable-dictionary?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.strodio.serializable-dictionary/)
 
 [README](README.md) | [中文文档](README_zh.md)
 
-A package for Unity to serialize Dictionary, HashSet and KeyValuePair.
+Serializable `Dictionary`, `HashSet` and `KeyValuePair`-style types with reorderable Unity Inspector controls.
 
-This project is developed from [azixMcAze's SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary).
+This project was developed from [azixMcAze's Unity-SerializableDictionary](https://github.com/azixMcAze/Unity-SerializableDictionary). See [Third-Party Notices](THIRD%20PARTY%20NOTICES.md).
 
-![demo](./Documentation~/SerializableDictionary_screenshot1.png)
+![Serializable Dictionary Inspector](./Documentation~/SerializableDictionary_screenshot1.png)
 
-![demo](./Documentation~/SerializableDictionary_screenshot2.png)
+![Serializable HashSet Inspector](./Documentation~/SerializableDictionary_screenshot2.png)
+
+## Requirements
+
+- Unity 2022.3 or newer.
+- Key and value types must follow Unity's serialization rules.
+
+The package is tested with Unity 2022.3 LTS and Unity 6.
 
 ## Installation
 
-### Install via Package Manager
+### OpenUPM
 
-Go to "*MenuBar* > *Window* > *Package Manager* > *Add* > *Add package from git URL*" and enter the URL "https://github.com/StromKuo/SerializableDictionary.git"
-
-![add_package_from_git_url](./Documentation~/add_package_from_git_url.png)
-
-### Install via Download
-
-Download and extract this project and put it in the *Packages* folder of your project.
-
-### Install via OpenUPM
-
-Run the following command in your Unity project directory:
+Run this command in the Unity project directory:
 
 ```sh
 openupm add com.strodio.serializable-dictionary
 ```
 
-For OpenUPM installation instructions, see the [OpenUPM package page](https://openupm.com/packages/com.strodio.serializable-dictionary/).
+See the [OpenUPM package page](https://openupm.com/packages/com.strodio.serializable-dictionary/) for scoped-registry installation.
+
+### Git URL
+
+In Package Manager, select **Add package from git URL** and enter:
+
+```text
+https://github.com/StromKuo/SerializableDictionary.git
+```
+
+For reproducible builds, append a release tag such as `#v0.2.0`.
 
 ## Usage
 
-Before Unity 2020.1, Unity doesn't support serialization of generic class, you need to create a derived class from `SerializableDictionary`, `SerializableHashSet` or `SerializableKeyValuePair`.
+```csharp
+using System;
+using SKUnityToolkit.SerializableDictionary;
+using UnityEngine;
 
-```c#
+public class Inventory : MonoBehaviour
+{
     [SerializeField]
-    StringStringDictionary m_StringStringDictionary;
-
-    [SerializeField]
-    StringMyClassDictionary m_StringMyClassDictionary;
-
-    [SerializeField]
-    ColorHashSet m_ColorHashSet;
+    SerializableDictionary<string, int> itemCounts = new SerializableDictionary<string, int>();
 
     [SerializeField]
-    StringIntPair m_StringIntPair;
+    SerializableHashSet<string> unlockedItems = new SerializableHashSet<string>();
 
-
-    [Serializable]
-    public class StringStringDictionary : SerializableDictionary<string, string> {}
-
-    [Serializable]
-    public class MyClass
-    {
-        public int i;
-        public string str;
-    }
-
-    [Serializable]
-    public class StringMyClassDictionary : SerializableDictionary<string, MyClass> {}
-
-    [Serializable]
-    public class ColorHashSet : SerializableHashSet<Color> {}
-
-    [Serializable]
-    public class StringIntPair : SerializableKeyValuePair<string, int> {}
+    [SerializeField]
+    SerializableKeyValuePair<string, Color> categoryColor =
+        new SerializableKeyValuePair<string, Color>("Default", Color.white);
+}
 ```
 
-After Unity 2020.1:
+The types derive from the standard collection implementations, so normal dictionary and set APIs are available at runtime.
 
-```c#
-    [SerializeField]
-    SerializableDictionary<string, string> m_StringStringDictionary;
+## Nested collections
 
-    [SerializeField]
-    SerializableDictionary<string, MyClass> m_StringMyClassDictionary;
+Unity does not directly serialize nested containers. Wrap the inner collection in a serializable class:
 
-    [SerializeField]
-    SerializableHashSet<Color> m_ColorHashSet;
+```csharp
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
-    [SerializeField]
-    SerializableKeyValuePair<string, int> m_StringIntPair;
+[Serializable]
+public class ColorList
+{
+    public List<Color> values = new List<Color>();
+}
 
-    [Serializable]
-    public class MyClass
-    {
-        public int i;
-        public string str;
-    }
-```
-
-## Dictionary of lists or arrays
-
-Unity cannot serialize a array of lists or an array of arrays.
-
-Create a class that inherits from `SerializableDictionaryStorage<List<TValue>`. This storage class will only contain a `List<TValue> data` field.
-
-```c#
 [SerializeField]
-StringColorListDictionary m_colorStringListDict;
-
-
-[Serializable]
-public class ColorListStorage : SerializableDictionaryStorage<List<Color>> {}
-
-[Serializable]
-public class StringColorListDictionary : SerializableDictionary<string, ColorListStorage> {}
-
-// you would have to access the color list through the .data field of ColorListStorage
-List<Color> colorList = m_colorStringListDict[key].data;
+SerializableDictionary<string, ColorList> colorsByCategory =
+    new SerializableDictionary<string, ColorList>();
 ```
+
+## Conflict behavior and limitations
+
+- The first entry for a duplicate dictionary key is retained; later duplicates are discarded.
+- Null and destroyed `UnityEngine.Object` keys are discarded.
+- `DeserializationConflictCount` reports how many dictionary or HashSet entries were discarded by the latest deserialization.
+- Custom equality comparers affect only the current in-memory instance and are not serialized by Unity.
+- Serialization order follows collection enumeration order and must not be used as application logic.
+
+See the [full documentation](Documentation~/index.md), [changelog](CHANGELOG.md), and the **Basic Usage** sample available from Package Manager.
+
+## License
+
+[MIT](LICENSE)

@@ -28,7 +28,7 @@ namespace SKUnityToolkit.SerializableDictionary
             float lineHeight;
             if (DrawKeyValuePairHelper.CanPropertyBeExpanded(valueProperty))
             {
-                lineHeight = keyPropertyHeight + valuePropertyHeight;
+                lineHeight = keyPropertyHeight + EditorGUIUtility.standardVerticalSpacing + valuePropertyHeight;
             }
             else
             {
@@ -115,14 +115,13 @@ namespace SKUnityToolkit.SerializableDictionary
 
             float valuePropertyHeight = EditorGUI.GetPropertyHeight(valueProperty);
             var valuePosition = linePosition;
+            valuePosition.y = linePosition.y + keyPropertyHeight + EditorGUIUtility.standardVerticalSpacing;
             valuePosition.height = valuePropertyHeight;
-            valuePosition.yMin += keyPropertyHeight;
-            valuePosition.yMin += EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.PropertyField(valuePosition, valueProperty, GUIContent.none, true);
 
             EditorGUIUtility.labelWidth = labelWidth;
 
-            return Mathf.Max(keyPropertyHeight, valuePropertyHeight);
+            return keyPropertyHeight + EditorGUIUtility.standardVerticalSpacing + valuePropertyHeight;
         }
 
         static float DrawKeyLine(SerializedProperty keyProperty, Rect linePosition, string keyLabel)

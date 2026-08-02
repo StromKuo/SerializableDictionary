@@ -58,3 +58,12 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Local Unity test harness generated state
+/.github/TestProject/[Ll]ibrary/
+/.github/TestProject/[Ll]ogs/
+/.github/TestProject/[Oo]bj/
+/.github/TestProject/[Tt]emp/
+/.github/TestProject/[Uu]serSettings/
+/.github/TestProject/Packages/packages-lock.json
+/.github/TestProject/ProjectSettings/*
+!/.github/TestProject/ProjectSettings/ProjectVersion.txt

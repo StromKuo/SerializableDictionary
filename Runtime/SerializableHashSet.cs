@@ -1,4 +1,3 @@
-﻿#if NET_4_6 || NET_STANDARD_2_0
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +10,39 @@ namespace SKUnityToolkit.SerializableDictionary
         [SerializeField]
         T[] m_keys;
 
+        [NonSerialized]
+        int m_deserializationConflictCount;
+
+        /// <summary>
+        /// Gets the number of null or duplicate values discarded by the most recent deserialization.
+        /// </summary>
+        public int DeserializationConflictCount => m_deserializationConflictCount;
+
+        public SerializableHashSet() { }
+        public SerializableHashSet(IEnumerable<T> collection) : base(collection) { }
+
+        /// <remarks>
+        /// Unity does not serialize the comparer. The comparer only applies to this in-memory instance.
+        /// </remarks>
+        public SerializableHashSet(IEqualityComparer<T> comparer) : base(comparer) { }
+
+        /// <remarks>
+        /// Unity does not serialize the comparer. The comparer only applies to this in-memory instance.
+        /// </remarks>
+        public SerializableHashSet(IEnumerable<T> collection, IEqualityComparer<T> comparer) : base(collection, comparer) { }
+
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
+            m_deserializationConflictCount = 0;
             if (m_keys != null)
             {
                 Clear();
                 for (int i = 0; i < m_keys.Length; ++i)
                 {
-                    Add(m_keys[i]);
+                    if (SerializableCollectionUtility.IsNull(m_keys[i]) || !Add(m_keys[i]))
+                    {
+                        m_deserializationConflictCount++;
+                    }
                 }
 
                 m_keys = null;
@@ -39,4 +63,3 @@ namespace SKUnityToolkit.SerializableDictionary
         }
     }
 }
-#endif
