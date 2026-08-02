@@ -26,7 +26,13 @@ Download and extract this project and put it in the *Packages* folder of your pr
 
 ### Install via OpenUPM
 
-Not yet...
+Run the following command in your Unity project directory:
+
+```sh
+openupm add com.strodio.serializable-dictionary
+```
+
+For OpenUPM installation instructions, see the [OpenUPM package page](https://openupm.com/packages/com.strodio.serializable-dictionary/).
 
 ## Usage
 

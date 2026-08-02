@@ -26,7 +26,13 @@
 
 ### 通过 OpenUPM 安装
 
-还不行...
+在 Unity 项目目录中执行以下命令：
+
+```sh
+openupm add com.strodio.serializable-dictionary
+```
+
+更多 OpenUPM 安装说明请参阅 [OpenUPM 包页面](https://openupm.com/packages/com.strodio.serializable-dictionary/)。
 
 ## 使用
 
