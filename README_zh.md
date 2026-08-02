@@ -1,5 +1,7 @@
 # SerializableDictionary
 
+[![Releases](https://img.shields.io/github/release/StromKuo/SerializableDictionary.svg)](https://github.com/StromKuo/SerializableDictionary/releases) [![openupm](https://img.shields.io/npm/v/com.strodio.serializable-dictionary?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.strodio.serializable-dictionary/)
+
 [README](README.md) | [中文文档](README_zh.md)
 
 一个 Unity package 用来序列化字 Dictionary、 HashSet 和 KeyValuePair 类型.
